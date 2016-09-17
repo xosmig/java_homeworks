@@ -1,4 +1,4 @@
-package com.xosmig.stringhashmap;
+package com.xosmig.hashmap;
 
 import java.util.ArrayList;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by Andrey Tonkikh on 11.09.16.
  */
 public class StringHashMap {
-    private int size = 0;
+    private int size;
     private ArrayList<List> data;
 
     public int size() {
@@ -18,10 +18,11 @@ public class StringHashMap {
     }
 
     public StringHashMap() {
-        this(1);
+        this(0);
     }
 
-    public StringHashMap(int buckets) {
+    private void ini(int buckets) {
+        size = 0;
         buckets = Math.max(buckets, 1);
         data = new ArrayList<>(buckets);
         for (int i = 0; i < buckets; i++) {
@@ -29,8 +30,16 @@ public class StringHashMap {
         }
     }
 
+    public StringHashMap(int buckets) {
+        ini(buckets);
+    }
+
     private int getBucket(String key) {
-        return key.hashCode() % data.size();
+        int ret = key.hashCode() % data.size();
+        if (ret < 0) {
+            ret += data.size();
+        }
+        return ret;
     }
 
     private List.Node find(String key) {
@@ -46,7 +55,7 @@ public class StringHashMap {
         if (node == null) {
             return null;
         }
-        return node.value();
+        return node.getValue();
     }
 
     private void assign(StringHashMap other) {
@@ -58,14 +67,14 @@ public class StringHashMap {
         StringHashMap newMap = new StringHashMap(2 * size);
         for (List list: data) {
             // FIXME: m.b. it's better to use foreach. But it takes more code.
-            for (List.Node node = list.first(); node != null; node = node.next()) {
-                newMap.push_unchecked(node.key(), node.value());
+            for (List.Node node = list.first(); node != null; node = node.getNext()) {
+                newMap.pushUnchecked(node.getKey(), node.getValue());
             }
         }
         assign(newMap);
     }
 
-    private void push_unchecked(String key, String value) {
+    private void pushUnchecked(String key, String value) {
         data.get(getBucket(key)).push(key, value);
         size++;
     }
@@ -76,10 +85,10 @@ public class StringHashMap {
             if (size == data.size()) {
                 extend();
             }
-            push_unchecked(key, value);
+            pushUnchecked(key, value);
             return null;
         } else {
-            String ret = node.value();
+            String ret = node.getValue();
             node.setValue(value);
             return ret;
         }
@@ -89,41 +98,40 @@ public class StringHashMap {
         List.Node node = data.get(getBucket(key)).remove(key);
         if (node != null) {
             size--;
-            return node.value();
+            return node.getValue();
         }
         return null;
     }
 
     public void clear() {
-        StringHashMap newMap = new StringHashMap();
-        assign(newMap);
+        ini(0);
     }
 
     private static class List {
         private Node first = null;
 
-        void push(String key, String value) {
+        public void push(String key, String value) {
             first = new Node(first, key, value);
         }
 
-        Node first() {
+        public Node first() {
             return first;
         }
 
-        Node find(String key) {
+        public Node find(String key) {
             Node node = first;
-            while (node != null && !node.key().equals(key)) {
-                node = node.next();
+            while (node != null && !node.getKey().equals(key)) {
+                node = node.getNext();
             }
             return node;
         }
 
-        Node remove(String key) {
+        public Node remove(String key) {
             Node prev = null;
             Node node = first;
-            while (node != null && !node.key().equals(key)) {
+            while (node != null && !node.getKey().equals(key)) {
                 prev = node;
-                node = node.next();
+                node = node.getNext();
             }
             if (node != null) {
                 if (prev == null) {
@@ -137,27 +145,28 @@ public class StringHashMap {
 
         private static class Node {
             private Node next;
-            private String key, value;
+            private String key;
+            private String value;
 
-            Node(Node next, String key, String value) {
+            public Node(Node next, String key, String value) {
                 this.next = next;
                 this.key = key;
                 this.value = value;
             }
 
-            Node next() {
+            public Node getNext() {
                 return next;
             }
 
-            String key() {
+            public String getKey() {
                 return key;
             }
 
-            String value() {
+            public String getValue() {
                 return value;
             }
 
-            void setValue(String value) {
+            public void setValue(String value) {
                 this.value = value;
             }
         }

@@ -1,4 +1,4 @@
-import com.xosmig.stringhashmap.StringHashMap;
+import com.xosmig.hashmap.StringHashMap;
 
 /**
  * Created by Andrey Tonkikh on 11.09.16.
@@ -10,11 +10,11 @@ public class Main { // FIXME: use normal unit tests (JUnit) instead of main func
         }
     }
 
-    private static String magick1(int x) {
+    private static String magic1(int x) {
         return Integer.toString((x * 9122 + 8157) ^ 26685);
     }
 
-    private static String magick2(int x) {
+    private static String magic2(int x) {
         return Integer.toString((x * 3119 + 26164) ^ 7391);
     }
 
@@ -24,24 +24,24 @@ public class Main { // FIXME: use normal unit tests (JUnit) instead of main func
         for (int i = 0; i < 10; i++) {
             assertEq(map.contains(Integer.toString(i)), false);
             assertEq(map.size(), i);
-            assertEq(map.put(Integer.toString(i), magick1(i)), null);
+            assertEq(map.put(Integer.toString(i), magic1(i)), null);
         }
         assertEq(map.capacity(), 16);
         for (int j = 0; j < 3; j++) {
             for (int i = 0; i < 10; i++) {
                 assertEq(map.contains(Integer.toString(i)), true);
-                assertEq(map.get(Integer.toString(i)), magick1(i));
+                assertEq(map.get(Integer.toString(i)), magic1(i));
             }
         }
 
         for (int i = 0; i < 10; i += 2) {
-            assertEq(map.put(Integer.toString(i), magick2(i)), magick1(i));
+            assertEq(map.put(Integer.toString(i), magic2(i)), magic1(i));
         }
         assertEq(map.size(), 10);
 
         for (int i = 0; i < 10; i++) {
             assertEq(map.contains(Integer.toString(i)), true);
-            String res = i % 2 == 0 ? magick2(i) : magick1(i);
+            String res = i % 2 == 0 ? magic2(i) : magic1(i);
             assertEq(map.get(Integer.toString(i)), res);
             assertEq(map.remove(Integer.toString(i)), res);
         }
