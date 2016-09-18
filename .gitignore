@@ -1,9 +1,10 @@
 *.class
-*out/
-*.idea/
+*/out/
+*/.idea/
 */gradlew
 */gradlew.bat
 */target/
 */build/
 */gradle/
 */.gradle/
+workspace.xml
