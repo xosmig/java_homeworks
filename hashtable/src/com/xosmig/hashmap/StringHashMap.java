@@ -3,35 +3,50 @@ package com.xosmig.hashmap;
 import java.util.ArrayList;
 
 /**
- * Created by Andrey Tonkikh on 11.09.16.
+ * @author Andrey Tonkikh
+ * StringHashMap is an associative container that contains string key-value pairs with unique keys.
+ * Search, insertion, and removal of elements have average constant-time complexity.
  */
 public class StringHashMap {
     private int size;
     private ArrayList<List> data;
 
+    /**
+     * @return the number of elements
+     */
     public int size() {
         return size;
     }
 
+    /**
+     * @return the number of elements that can be held in currently allocated storage.
+     */
     public int capacity() {
         return data.size();
     }
 
+    /**
+     * Constructs an empty StringHashMap with minimum capacity.
+     */
     public StringHashMap() {
         this(0);
     }
 
-    private void ini(int buckets) {
+    private void ini(int capacity) {
         size = 0;
-        buckets = Math.max(buckets, 1);
-        data = new ArrayList<>(buckets);
-        for (int i = 0; i < buckets; i++) {
+        capacity = Math.max(capacity, 1);
+        data = new ArrayList<>(capacity);
+        for (int i = 0; i < capacity; i++) {
             data.add(new List());
         }
     }
 
-    public StringHashMap(int buckets) {
-        ini(buckets);
+    /**
+     * Constructs an empty StringHashMap with specified capacity.
+     * @param capacity - an initial capacity.
+     */
+    public StringHashMap(int capacity) {
+        ini(capacity);
     }
 
     private int getBucket(String key) {
@@ -46,10 +61,16 @@ public class StringHashMap {
         return data.get(getBucket(key)).find(key);
     }
 
+    /**
+     * @return true if the map contains a value for the specified key.
+     */
     public boolean contains(String key) {
         return find(key) != null;
     }
 
+    /**
+     * @return the value corresponding to the key.
+     */
     public String get(String key) {
         List.Node node = find(key);
         if (node == null) {
@@ -63,8 +84,12 @@ public class StringHashMap {
         size = other.size;
     }
 
+    /**
+     * Reallocates memory. Makes capacity() := size() * 2.
+     * Time = O(capacity() + size())
+     */
     private void extend() {
-        StringHashMap newMap = new StringHashMap(2 * size);
+        StringHashMap newMap = new StringHashMap(2 * size());
         for (List list: data) {
             // FIXME: m.b. it's better to use foreach. But it takes more code.
             for (List.Node node = list.first(); node != null; node = node.getNext()) {
@@ -74,11 +99,20 @@ public class StringHashMap {
         assign(newMap);
     }
 
+    /**
+     * pushes the given key-value pair without.
+     * doesn't check if this key is already in the map
+     * or if the map is full.
+     */
     private void pushUnchecked(String key, String value) {
         data.get(getBucket(key)).push(key, value);
         size++;
     }
 
+    /**
+     * Inserts a key-value pair into the map or changes the value for the key if it is already in the map.
+     * @return an old value if the given key was previously in the map. null otherwise.
+     */
     public String put(String key, String value) {
         List.Node node = find(key);
         if (node == null) {
@@ -94,6 +128,10 @@ public class StringHashMap {
         }
     }
 
+    /**
+     * Removes a key from the map.
+     * @return the value at the key if the key was previously in the map.
+     */
     public String remove(String key) {
         List.Node node = data.get(getBucket(key)).remove(key);
         if (node != null) {
@@ -103,6 +141,9 @@ public class StringHashMap {
         return null;
     }
 
+    /**
+     * Clears the map, removing all key-value pairs.
+     */
     public void clear() {
         ini(0);
     }
