@@ -1,1 +1,1 @@
-# java_practices
+# java_homeworks
