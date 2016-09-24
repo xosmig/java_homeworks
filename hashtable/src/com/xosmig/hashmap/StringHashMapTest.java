@@ -11,41 +11,41 @@ import static org.junit.Assert.*;
  */
 public class StringHashMapTest {
     @Test
-    public void size() throws Exception {
+    public void sizeTest() throws Exception {
         StringHashMap map = new StringHashMap(2);
-        Assert.assertEquals(map.size(), 0);
+        Assert.assertEquals(0, map.size());
 
         map.put("a", "1");
-        Assert.assertEquals(map.size(), 1);
+        Assert.assertEquals(1, map.size());
         map.put("a", "2");
-        Assert.assertEquals(map.size(), 1);
+        Assert.assertEquals(1, map.size());
 
         map.put("b", "1");
-        Assert.assertEquals(map.size(), 2);
+        Assert.assertEquals(2, map.size());
 
         map.put("c", "1");
-        Assert.assertEquals(map.size(), 3);
+        Assert.assertEquals(3, map.size());
     }
 
     @Test
-    public void capacity() throws Exception {
+    public void capacityTest() throws Exception {
         StringHashMap map = new StringHashMap(2);
-        Assert.assertEquals(map.capacity(), 2);
+        Assert.assertEquals(2, map.capacity());
 
         map.put("a", "1");
-        Assert.assertEquals(map.capacity(), 2);
+        Assert.assertEquals(2, map.capacity());
         map.put("a", "2");
-        Assert.assertEquals(map.capacity(), 2);
+        Assert.assertEquals(2, map.capacity());
 
         map.put("b", "1");
-        Assert.assertEquals(map.capacity(), 2);
+        Assert.assertEquals(2, map.capacity());
 
         map.put("c", "1");
-        Assert.assertEquals(map.capacity(), 4);
+        Assert.assertEquals(4, map.capacity());
     }
 
     @Test
-    public void contains() throws Exception {
+    public void containsTest() throws Exception {
         StringHashMap map = new StringHashMap(2);
         assertFalse(map.contains("a"));
 
@@ -70,48 +70,48 @@ public class StringHashMapTest {
     }
 
     @Test
-    public void clear() throws Exception {
+    public void clearTest() throws Exception {
         StringHashMap map = new StringHashMap(10);
         map.put("1", "Cat");
+        map.put("2", "Dog");
+        map.put("3", "Frog");
         map.clear();
-        assertEquals(map.size(), 0);
-        assertEquals(map.capacity(), 10);
+        assertEquals(0, map.size());
     }
 
     @Test
-    public void complex() throws Exception {
+    public void complexTest() throws Exception {
         StringHashMap map = new StringHashMap();
 
         for (int i = 0; i < 10; i++) {
             String s = Integer.toString(i);
             assertFalse(map.contains(s));
-            assertEquals(map.size(), i);
-            assertEquals(map.put(s, magic1(s)), null);
+            assertEquals(i, map.size());
+            assertEquals(null, map.put(s, magic1(s)));
         }
-        assertEquals(map.capacity(), 16);
+        assertEquals(16, map.capacity());
         for (int j = 0; j < 3; j++) {
             for (int i = 0; i < 10; i++) {
                 String s = Integer.toString(i);
                 assertTrue(map.contains(s));
-                assertEquals(map.get(s), magic1(s));
+                assertEquals(magic1(s), map.get(s));
             }
         }
 
         for (int i = 0; i < 10; i += 2) {
             String s = Integer.toString(i);
-            assertEquals(map.put(s, magic2(s)), magic1(s));
+            assertEquals(magic1(s), map.put(s, magic2(s)));
         }
-        assertEquals(map.size(), 10);
+        assertEquals(10, map.size());
 
         for (int i = 0; i < 10; i++) {
             String s = Integer.toString(i);
             assertTrue(map.contains(s));
             String res = i % 2 == 0 ? magic2(s) : magic1(s);
-            assertEquals(map.get(s), res);
-            assertEquals(map.remove(s), res);
+            assertEquals(res, map.get(s));
+            assertEquals(res, map.remove(s));
         }
-        assertEquals(map.size(), 0);
-        assertEquals(map.capacity(), 16);
+        assertEquals(0, map.size(), 0);
+        assertEquals(16, map.capacity());
     }
-
 }

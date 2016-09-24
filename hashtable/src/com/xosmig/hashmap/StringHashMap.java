@@ -12,14 +12,14 @@ public class StringHashMap {
     private ArrayList<List> data;
 
     /**
-     * @return the number of elements
+     * Returns the number of elements
      */
     public int size() {
         return size;
     }
 
     /**
-     * @return the number of elements that can be held in currently allocated storage.
+     * Returns the number of elements that can be held in currently allocated storage.
      */
     public int capacity() {
         return data.size();
@@ -62,14 +62,14 @@ public class StringHashMap {
     }
 
     /**
-     * @return true if the map contains a value for the specified key.
+     * Returns true if the map contains a value for the specified key.
      */
     public boolean contains(String key) {
         return find(key) != null;
     }
 
     /**
-     * @return the value corresponding to the key.
+     * Returns the value corresponding to the key.
      */
     public String get(String key) {
         List.Node node = find(key);
@@ -100,7 +100,7 @@ public class StringHashMap {
     }
 
     /**
-     * pushes the given key-value pair without.
+     * pushes the given key-value.
      * doesn't check if this key is already in the map
      * or if the map is full.
      */
@@ -111,7 +111,7 @@ public class StringHashMap {
 
     /**
      * Inserts a key-value pair into the map or changes the value for the key if it is already in the map.
-     * @return an old value if the given key was previously in the map. null otherwise.
+     * Returns an old value if the given key was previously in the map. null otherwise.
      */
     public String put(String key, String value) {
         List.Node node = find(key);
@@ -130,7 +130,7 @@ public class StringHashMap {
 
     /**
      * Removes a key from the map.
-     * @return the value at the key if the key was previously in the map.
+     * Returns the value at the key if the key was previously in the map.
      */
     public String remove(String key) {
         List.Node node = data.get(getBucket(key)).remove(key);
