@@ -1,22 +1,28 @@
 package com.xosmig.trie;
 
-import java.util.HashMap;
+import com.xosmig.serializable.MySuperSerializable;
 
-public class Trie {
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Trie implements MySuperSerializable {
     private Node root = new Node();
 
     /**
      * Returns true if there was no such element in the trie.
      * Time = O(|element|).
      */
-    boolean add(String element) {
+    public boolean add(String element) {
         return root.add(element);
     }
 
     /**
      * Time = O(|element|)
      */
-    boolean contains(String element) {
+    public boolean contains(String element) {
         Node node = find(element);
         return node != null && node.getMark();
     }
@@ -25,26 +31,36 @@ public class Trie {
      * Returns true in an element was in the trie.
      * Time = O(|element|)
      */
-    boolean remove(String element) {
+    public boolean remove(String element) {
         return root.remove(element);
     }
 
     /**
      * Time = constant
      */
-    int size() {
+    public int size() {
         return root.size();
     }
 
     /**
      * Time = O(|prefix|)
      */
-    int howManyStartsWithPrefix(String prefix) {
+    public int howManyStartsWithPrefix(String prefix) {
         Node node = find(prefix);
         if (node == null) {
             return 0;
         }
         return node.size();
+    }
+
+    @Override
+    public void serialize(OutputStream out) throws IOException {
+        root.serialize(out);
+    }
+
+    @Override
+    public void deserialize(InputStream in) throws IOException {
+        root.deserialize(in);
     }
 
     private Node find(String element) {
@@ -55,10 +71,18 @@ public class Trie {
         return node;
     }
 
-    private class Node {
-        private HashMap<Character, Node> next = new HashMap<>();
-        private boolean mark = false;
-        private int size = 0;
+    private class Node implements MySuperSerializable {
+        private static final int BEGIN_CHILD = 2;
+        private static final int END_MARKED = 1;
+        private static final int END_NOT_MARKED = 0;
+
+        private HashMap<Character, Node> next;
+        private boolean mark;
+        private int size;
+
+        public Node() {
+            initialize();
+        }
 
         public Node go(char ch) {
             return next.get(ch);
@@ -85,10 +109,67 @@ public class Trie {
         }
 
         public boolean add(String str) {
-            return add(str, 0);
+            return addRecursive(str, 0);
         }
 
-        public boolean add(String str, int index) {
+        public boolean remove(String str) {
+            return removeRecursive(str, 0);
+        }
+
+        @Override
+        public void serialize(OutputStream out) throws IOException {
+            for (Map.Entry<Character, Node> entry : next.entrySet()) {
+                out.write(BEGIN_CHILD);
+                out.write(entry.getKey());
+                entry.getValue().serialize(out);
+            }
+            out.write(getMark() ? END_MARKED : END_NOT_MARKED);
+        }
+
+        @Override
+        public void deserialize(InputStream in) throws IOException {
+            // restore the default state
+            initialize();
+
+            while (true) {
+                int flag = in.read();
+
+                // end of Node
+                if (flag == END_MARKED) {
+                    setMark();
+                    size++;
+                    break;
+                }
+                if (flag == END_NOT_MARKED) {
+                    break;
+                }
+
+                // has a child
+                if (flag != BEGIN_CHILD) {
+                    throw new IllegalArgumentException();
+                }
+
+                int iEdge = in.read();
+                if (iEdge > Character.MAX_VALUE) {
+                    throw new IllegalArgumentException();
+                }
+
+                char edge = (char)iEdge;
+                Node child = new Node();
+                next.put(edge, child);
+                child.deserialize(in);
+
+                size += child.size();
+            }
+        }
+
+        private void initialize() {
+            next = new HashMap<>();
+            mark = false;
+            size = 0;
+        }
+
+        private boolean addRecursive(String str, int index) {
             // the end of str:
             if (index == str.length()) {
                 if (getMark()) {
@@ -108,7 +189,7 @@ public class Trie {
                 next.put(edge, node);
             }
 
-            if (node.add(str, index + 1)) {
+            if (node.addRecursive(str, index + 1)) {
                 size++;
                 return true;
             } else {
@@ -116,11 +197,7 @@ public class Trie {
             }
         }
 
-        public boolean remove(String str) {
-            return remove(str, 0);
-        }
-
-        public boolean remove(String str, int index) {
+        private boolean removeRecursive(String str, int index) {
             // the end of str:
             if (index == str.length()) {
                 if (getMark()) {
@@ -136,7 +213,7 @@ public class Trie {
             char edge = str.charAt(index);
             Node node = go(edge);
 
-            if (node == null || !node.remove(str, index + 1)) {
+            if (node == null || !node.removeRecursive(str, index + 1)) {
                 return false;
             }
             if (node.isEmpty()) {
