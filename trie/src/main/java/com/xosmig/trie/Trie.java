@@ -8,6 +8,10 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A fast dynamic set of strings.
+ * Also allows you to find out how many strings starts with a particular prefix.
+ */
 public class Trie implements MySuperSerializable {
     private Node root = new Node();
 

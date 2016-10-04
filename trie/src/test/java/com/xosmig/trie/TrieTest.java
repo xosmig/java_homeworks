@@ -9,21 +9,59 @@ import java.util.function.Function;
 import static org.junit.Assert.*;
 
 public class TrieTest {
+    @Test
+    public void addAndRemoveAndContainsAndSizeTest() throws Exception {
+        final int size = 100;
+        Function<Integer, String> magic = TrieTest::magic1;
 
-    private static String magic1(int x) {
-        return Integer.toString((25681 * x + 30192) ^ 26743);
-    }
-
-    private static String magic2(int x) {
-        return Integer.toString((31366 * x + 20688) ^ 11086);
-    }
-
-    private Trie generateTrie(int size, Function<Integer, String> generator) {
         Trie trie = new Trie();
+
         for (int i = 0; i < size; i++) {
-            trie.add(generator.apply(i));
+            assertTrue(trie.add(magic.apply(i)));
         }
-        return trie;
+        assertEquals(size, trie.size());
+
+        for (int i = 0; i < size; i += 2) {
+            assertTrue(trie.contains(magic.apply(i)));
+            assertFalse(trie.add(magic.apply(i)));
+        }
+
+        int removed = 0;
+        for (int i = 0; i < size; i += 3) {
+            assertTrue(trie.remove(magic.apply(i)));
+            assertFalse(trie.contains(magic.apply(i)));
+            removed++;
+        }
+        assertEquals(size - removed, trie.size());
+
+        for (int i = 0; i < size; i+= 3) {
+            assertTrue(trie.add(magic.apply(i)));
+            assertTrue(trie.contains(magic.apply(i)));
+        }
+        assertEquals(size, trie.size());
+    }
+
+
+    @Test
+    public void howManyStartsWithPrefixTest() throws Exception {
+        Trie trie = new Trie();
+
+        trie.add("Hello");
+        trie.add("Halo");
+
+        assertEquals(2, trie.howManyStartsWithPrefix("H"));
+        assertEquals(1, trie.howManyStartsWithPrefix("He"));
+        assertEquals(1, trie.howManyStartsWithPrefix("Ha"));
+        assertEquals(1, trie.howManyStartsWithPrefix("Hal"));
+        assertEquals(1, trie.howManyStartsWithPrefix("Hello"));
+        assertEquals(0, trie.howManyStartsWithPrefix("Hi"));
+
+        trie.remove("Hello");
+
+        assertEquals(1, trie.howManyStartsWithPrefix("H"));
+        assertEquals(1, trie.howManyStartsWithPrefix("Ha"));
+        assertEquals(0, trie.howManyStartsWithPrefix("He"));
+        assertEquals(0, trie.howManyStartsWithPrefix("Hel"));
     }
 
     @Test
@@ -61,36 +99,20 @@ public class TrieTest {
         assertEquals(serialized1, serialized2);
     }
 
-    // It is pointless to test methods independently.
-    @Test
-    public void complexTest() throws Exception {
+
+    private static String magic1(int x) {
+        return Integer.toString((25681 * x + 30192) ^ 26743);
+    }
+
+    private static String magic2(int x) {
+        return Integer.toString((31366 * x + 20688) ^ 11086);
+    }
+
+    private Trie generateTrie(int size, Function<Integer, String> generator) {
         Trie trie = new Trie();
-
-        assertTrue(trie.add("Hello"));
-        assertTrue(trie.add("Halo"));
-        assertEquals(2, trie.size());
-        assertFalse(trie.add("Halo"));
-        assertEquals(2, trie.size());
-
-        assertEquals(2, trie.howManyStartsWithPrefix("H"));
-        assertEquals(1, trie.howManyStartsWithPrefix("He"));
-        assertEquals(1, trie.howManyStartsWithPrefix("Ha"));
-        assertEquals(1, trie.howManyStartsWithPrefix("Hal"));
-        assertEquals(1, trie.howManyStartsWithPrefix("Hello"));
-        assertEquals(0, trie.howManyStartsWithPrefix("Hi"));
-
-        assertTrue(trie.contains("Hello"));
-        assertTrue(trie.contains("Halo"));
-
-        assertTrue(trie.remove("Hello"));
-        assertEquals(1, trie.size());
-
-        assertEquals(1, trie.howManyStartsWithPrefix("H"));
-        assertEquals(1, trie.howManyStartsWithPrefix("Ha"));
-        assertEquals(0, trie.howManyStartsWithPrefix("He"));
-        assertEquals(0, trie.howManyStartsWithPrefix("Hel"));
-
-        assertFalse(trie.contains("Hello"));
-        assertTrue(trie.contains("Halo"));
+        for (int i = 0; i < size; i++) {
+            trie.add(generator.apply(i));
+        }
+        return trie;
     }
 }
