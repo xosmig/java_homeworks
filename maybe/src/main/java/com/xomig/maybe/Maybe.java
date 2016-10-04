@@ -10,7 +10,7 @@ import java.util.function.Function;
  * Immutable (but may contains reference to mutable data).
  */
 public class Maybe<T> {
-    public static final Maybe NOTHING = new Maybe(null);
+    public static final @NotNull Maybe NOTHING = new Maybe(null);
     private T obj;
 
     private Maybe(T obj) {
@@ -22,6 +22,9 @@ public class Maybe<T> {
      */
     @NotNull
     public static <T> Maybe<T> just(@NotNull T obj) {
+        if (obj == null) {
+            throw new IllegalArgumentException();
+        }
         return new Maybe<>(obj);
     }
 
