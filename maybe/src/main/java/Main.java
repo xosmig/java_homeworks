@@ -1,12 +1,13 @@
 import com.xosmig.numbers.Numbers;
 
-import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            File inputFile = new File("input.txt");
-            File outputFile = new File("output.txt");
+            Path inputFile = FileSystems.getDefault().getPath("input.txt");
+            Path outputFile = FileSystems.getDefault().getPath("output.txt");
             Numbers.task(inputFile, outputFile);
         } catch (Exception e) {
             e.printStackTrace();
