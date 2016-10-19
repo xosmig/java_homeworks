@@ -80,7 +80,7 @@ public class Maybe<T> implements Iterable<T> {
     @NotNull
     @Override
     public Iterator<T> iterator() {
-        return null;
+        return new Iter();
     }
 
     /**
