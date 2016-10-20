@@ -10,7 +10,7 @@ public class SlowSetTest {
     }
 
     @Test
-    public void testAll() throws Exception {
+    public void testComparable() throws Exception {
         final int size = 30;
 
         SlowSet<String> set = new SlowSet<>();
@@ -27,4 +27,23 @@ public class SlowSetTest {
             assertTrue(set.contains(magic(i)));
         }
     }
+
+/*    @Test
+    public void testWithComparator() throws Exception {
+        final int size = 30;
+
+        SlowSet<String> set = new SlowSet<>((x, y) -> x > y);
+        for (int i = 0; i < size; i++) {
+            assertTrue(set.add(magic(i)));
+        }
+        assertEquals(size, set.size());
+        for (int i = 0; i < size; i += 2) {
+            assertFalse(set.add(magic(i)));
+        }
+        assertEquals(size, set.size());
+
+        for (int i = 0; i < size; i++) {
+            assertTrue(set.contains(magic(i)));
+        }
+    }*/
 }
