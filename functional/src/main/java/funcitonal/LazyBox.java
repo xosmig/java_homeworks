@@ -8,6 +8,26 @@ public interface LazyBox<T> {
     T get();
 }
 
+/*package*/ class FoldlBox<T, R> implements LazyBox<R> {
+    final Function2<? super R, ? super T, ? extends R> f;
+    final R init;
+    final Iterator<? extends T> it;
+
+    public FoldlBox(Function2<? super R, ? super T, ? extends R> f, R init, Iterator<? extends T> it) {
+        this.f = f;
+        this.init = init;
+        this.it = it;
+    }
+
+    @Override
+    public R get() {
+        R val = init;
+        while (it.hasNext()) {
+            val = f.apply(val, it.next());
+        }
+        return val;
+    }
+}
 
 /*package*/ class FoldrBox<T, R> implements LazyBox<R> {
     final Function2<? super T, ? super R, ? extends R> f;

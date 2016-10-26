@@ -2,11 +2,7 @@ package funcitonal;
 
 import com.xosmig.function.*;
 
-import java.util.Iterator;
 
-/**
- *
- */
 public final class Functional {
     public static <T, R>
     LazyList<R> map(Function1<? super T, ? extends R> f, Iterable<? extends T> a) {
@@ -34,10 +30,7 @@ public final class Functional {
     }
 
     public static <T, R>
-    R foldl(Function2<?super R, ? super T, ? extends R> f, R init, Iterable<? extends T> a) {
-        for (T x : a) {
-            init = f.apply(init, x);
-        }
-        return init;
+    LazyBox<R> foldl(Function2<?super R, ? super T, ? extends R> f, R init, Iterable<? extends T> a) {
+        return new FoldlBox<>(f, init, a.iterator());
     }
 }
