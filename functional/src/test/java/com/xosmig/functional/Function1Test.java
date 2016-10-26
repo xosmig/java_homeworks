@@ -1,5 +1,6 @@
-package com.xosmig.function;
+package com.xosmig.functional;
 
+import com.xosmig.function.Function1;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;

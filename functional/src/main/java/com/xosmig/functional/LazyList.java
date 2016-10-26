@@ -1,8 +1,10 @@
-package com.xosmig.function;
+package com.xosmig.functional;
+
+import com.xosmig.functional.LazyObject;
 
 import java.util.AbstractList;
 
-public class LazyList2<T> extends AbstractList<T> {
+public class LazyList<T> extends AbstractList<T> {
     @Override
     public int size() {
         return 0; // TODO
@@ -14,8 +16,8 @@ public class LazyList2<T> extends AbstractList<T> {
     }
 
     private static class Node<T> {
-        Lazy2<T> val;
-        Lazy2<Node<T>> next;
+        LazyObject<T> val;
+        LazyObject<Node<T>> next;
 
         public int size() {
             return 1 + (next == null ? 0 : next.value().size());
