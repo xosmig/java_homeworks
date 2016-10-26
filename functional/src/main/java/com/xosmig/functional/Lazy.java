@@ -1,5 +1,5 @@
 package com.xosmig.functional;
 
-public interface Lazy<T> {
-    T value();
+public abstract class Lazy<T> {
+    abstract T value();
 }

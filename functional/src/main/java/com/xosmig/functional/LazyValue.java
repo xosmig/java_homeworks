@@ -1,6 +1,6 @@
 package com.xosmig.functional;
 
-public class LazyValue<T> implements Lazy<T> {
+public class LazyValue<T> extends Lazy<T> {
     T value;
 
     public LazyValue(T value) {

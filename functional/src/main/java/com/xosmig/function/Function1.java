@@ -1,12 +1,13 @@
 package com.xosmig.function;
 
-import com.xosmig.fastfunctional.FastLazy;
+import com.xosmig.functional.Lazy;
+import com.xosmig.functional.LazyObject;
 
 public interface Function1<T, R> {
     R apply(T param);
 
-    default FastLazy<R> fastLazy(T t) {
-        return () -> this.apply(t);
+    default Lazy<R> fastLazy(T t) {
+        return new LazyObject<>(() -> this.apply(t));
     }
 
     default <G>

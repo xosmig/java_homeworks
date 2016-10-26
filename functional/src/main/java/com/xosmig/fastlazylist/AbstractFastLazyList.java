@@ -1,7 +1,10 @@
-package com.xosmig.fastfunctional;
+package com.xosmig.fastlazylist;
 
 import java.util.*;
 
+/**
+ *
+ */
 public abstract class AbstractFastLazyList<T, R> extends AbstractList<R> implements FastLazyList<R> {
     private List<R> realList = new LinkedList<>();
     protected Iterator<? extends T> it;

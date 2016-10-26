@@ -7,9 +7,9 @@ import java.util.function.Supplier;
  * LazyObject container.
  * Calls `getImpl` only once on the first call of `value`.
  */
-public class LazyObject<T> implements Lazy<T> {
+public class LazyObject<T> extends Lazy<T> {
     T result;
-    Supplier<T> getImpl;
+    final Supplier<T> getImpl;
     boolean counted;
 
     @Override

@@ -1,5 +1,7 @@
-package com.xosmig.fastfunctional;
+package com.xosmig.functional;
 
+import com.xosmig.fastlazylist.AbstractFastLazyList;
+import com.xosmig.fastlazylist.FastLazyList;
 import com.xosmig.function.Predicate1;
 import com.xosmig.function.Function1;
 import com.xosmig.function.Function2;
@@ -7,8 +9,9 @@ import com.xosmig.function.Function2;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.function.Supplier;
 
-public final class FastFunctional {
+public final class Functional {
     public static <T, R>
     FastLazyList<R> map(Function1<? super T, ? extends R> f, Iterable<? extends T> a) {
         return new FastMapList<T, R>(f, a.iterator());
@@ -30,9 +33,9 @@ public final class FastFunctional {
     }
 
     public static <T, R>
-    FastLazy<R> foldr(Function2<? super T, ?super R, ? extends R> f, R init, Iterable<? extends T> a) {
+    Lazy<R> foldr(Function2<? super T, ?super R, ? extends R> f, R init, Iterable<? extends T> a) {
         final Iterator<? extends T> it = a.iterator();
-        return new FastLazy<R>() {
+        return new LazyObject<>(new Supplier<R>() {
             @Override
             public R get() {
                 return foldrImpl();
@@ -46,19 +49,19 @@ public final class FastFunctional {
                     return init;
                 }
             }
-        };
+        });
     }
 
     public static <T, R>
-    FastLazy<R> foldl(Function2<?super R, ? super T, ? extends R> f, R init, Iterable<? extends T> a) {
+    Lazy<R> foldl(Function2<?super R, ? super T, ? extends R> f, R init, Iterable<? extends T> a) {
         final Iterator<? extends T> it = a.iterator();
-        return () -> {
+        return new LazyObject<>(() -> {
             R val = init;
             while (it.hasNext()) {
                 val = f.apply(val, it.next());
             }
             return val;
-        };
+        });
     }
 }
 
