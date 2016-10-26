@@ -1,6 +1,9 @@
 package funcitonal;
 
-import com.xosmig.function.*;
+import com.xosmig.function.Function1;
+import com.xosmig.function.Function2;
+import com.xosmig.function.Predicate1;
+import funcitonal.*;
 
 
 public final class Functional {
