@@ -1,7 +1,7 @@
-package mcollections;
+package funcitonal;
 
-import com.xosmig.functional.Function1;
-import com.xosmig.functional.Predicate1;
+import com.xosmig.function.Function1;
+import com.xosmig.function.Predicate1;
 
 import java.util.*;
 
@@ -61,16 +61,14 @@ public interface LazyList<R> extends List<R> {
         }
     }
 
-
-
     public abstract Optional<R> getNext();
 }
 
 
-class MapList<T, R> extends LazyListImpl<T, R> {
-    private Function1<T, ? extends R> f;
+/*package*/ class MapList<T, R> extends LazyListImpl<T, R> {
+    private Function1<? super T, ? extends R> f;
 
-    public MapList(Function1<T, ? extends R> f, Iterator<? extends T> it) {
+    public MapList(Function1<? super T, ? extends R> f, Iterator<? extends T> it) {
         super(it);
         this.f = f;
     }
@@ -86,10 +84,10 @@ class MapList<T, R> extends LazyListImpl<T, R> {
 }
 
 
-class FilterList<T> extends LazyListImpl<T, T> {
-    private Predicate1<T> p;
+/*package*/ class FilterList<T> extends LazyListImpl<T, T> {
+    private Predicate1<? super T> p;
 
-    public FilterList(Predicate1<T> p, Iterator<? extends T> it) {
+    public FilterList(Predicate1<? super T> p, Iterator<? extends T> it) {
         super(it);
         this.p = p;
     }
@@ -106,10 +104,10 @@ class FilterList<T> extends LazyListImpl<T, T> {
     }
 }
 
-class TakeWhileList<T> extends LazyListImpl<T, T> {
-    private Predicate1<T> p;
+/*package*/ class TakeWhileList<T> extends LazyListImpl<T, T> {
+    private Predicate1<?super T> p;
 
-    public TakeWhileList(Predicate1<T> p, Iterator<? extends T> it) {
+    public TakeWhileList(Predicate1<?super T> p, Iterator<? extends T> it) {
         super(it);
         this.p = p;
     }
