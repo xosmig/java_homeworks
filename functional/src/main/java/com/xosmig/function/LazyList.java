@@ -1,7 +1,4 @@
-package funcitonal;
-
-import com.xosmig.function.Function1;
-import com.xosmig.function.Predicate1;
+package com.xosmig.function;
 
 import java.util.*;
 
@@ -9,7 +6,6 @@ public interface LazyList<R> extends List<R> {
     void takeAll();
     void takeTo(int index);
 }
-
 
 /*package*/ abstract class LazyListImpl<T, R> extends AbstractList<R> implements LazyList<R> {
     private List<R> realList = new LinkedList<>();

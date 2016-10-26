@@ -1,7 +1,6 @@
 package com.xosmig.function;
 
 import org.junit.Test;
-import org.omg.CORBA.BooleanHolder;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
