@@ -3,7 +3,6 @@ package com.xosmig.functional;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 import static com.xosmig.functional.Functional.*;

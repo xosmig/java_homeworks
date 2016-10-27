@@ -7,6 +7,13 @@ import static org.junit.Assert.*;
 
 public class Function2Test {
     @Test
+    public void curry() throws Exception {
+        Function2<Boolean, Integer, String> f = (b, i) -> Integer.toString(i + (b ? 7 : 2));
+        assertThat(f.curry().apply(true).apply(1), is(f.apply(true, 1)));
+        assertThat(f.curry().apply(false).apply(5), is(f.apply(false, 5)));
+    }
+
+    @Test
     public void applyTest() throws Exception {
         Function2<Boolean, Integer, String> f = (b, i) -> Integer.toString(i + (b ? 7 : 2));
         assertThat(f.apply(true, 5), is("12"));

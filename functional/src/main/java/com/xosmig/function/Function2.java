@@ -52,8 +52,8 @@ public interface Function2<T, U, R> {
      * Translating into function :: T -> (U -> R)
      * f.curry().apply(t).apply(u) is equivalent to f.apply(t, u).
      */
-    default
-    Function1<T, Function1<U, R>> curry() {
+    default <ET extends T, EU extends U>
+    Function1<ET, Function1<EU, R>> curry() {
         return this::bind1;
     }
 }
