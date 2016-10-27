@@ -26,7 +26,7 @@ public class LazyList<T> extends AbstractList<T> {
 
     @Override
     public int size() {
-        return 1 + (tail == null ? 0 : tail.value().size());
+        return this == EMPTY ? 0 : 1 + tail.value().size();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class LazyList<T> extends AbstractList<T> {
 
         @Override
         public boolean hasNext() {
-            return node != null;
+            return node != EMPTY;
         }
 
         @Override
