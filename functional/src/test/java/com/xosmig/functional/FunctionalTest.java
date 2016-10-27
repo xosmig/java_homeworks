@@ -3,14 +3,36 @@ package com.xosmig.functional;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.function.Function;
 
+import static com.xosmig.functional.Functional.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
 public class FunctionalTest {
+    @Test
+    public void foldrTest() throws Exception {
+        ArrayList<Integer> a = new ArrayList<>();
+        a.add(10);
+        a.add(7);
+        a.add(5);
+        Collections.reverse(a);
+        // 10 - (7 - (5 - 2)) = 6
+        assertThat(foldr((x, r) -> x - r.value(), 2, a).value(), is(6));
+    }
+
+    @Test
+    public void foldlTest() throws Exception {
+        ArrayList<Integer> a = new ArrayList<>();
+        a.add(10);
+        a.add(7);
+        a.add(5);
+        Collections.reverse(a);
+        // ((2 - 10) - 7) - 5 = -20
+        assertThat(foldl((r, x) -> r.value() - x, 2, a).value(), is(-20));
+    }
+
     @Test
     public void mapTest() throws Exception {
         ArrayList<Integer> a = new ArrayList<>();
@@ -120,5 +142,4 @@ public class FunctionalTest {
         assertThat(list.size(), is(10));
         assertThat(list.toArray(), is(new Integer[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
     }
-
 }

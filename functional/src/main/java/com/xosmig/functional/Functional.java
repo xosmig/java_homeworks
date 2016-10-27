@@ -5,7 +5,6 @@ import com.xosmig.function.Function2;
 import com.xosmig.function.Predicate1;
 
 import java.util.Iterator;
-import java.util.function.Supplier;
 
 public final class Functional {
     public static <T, R>
@@ -41,32 +40,33 @@ public final class Functional {
     }
 
     public static <T, R>
-    Lazy<R> foldr(Function2<? super T, Lazy<R>, ? extends R> f, R init, Iterable<? extends T> a) {
-        final Iterator<? extends T> it = a.iterator();
-        Supplier<Lazy<R>> foldrImpl = new Supplier<Lazy<R>>() {
-            @Override
-            public Lazy<R> get() {
-                if (it.hasNext()) {
-                    T e = it.next();
-                    return Lazy.expr(() -> f.apply(e, this.get()));
-                } else {
-                    return Lazy.valueOf(init);
-                }
-            }
-        };
-        return foldrImpl.get();
+    Lazy<R> foldr(Function2<? super T, Lazy<R>, R> f, R init, Iterable<? extends T> a) {
+        return foldrImpl(f, init, a.iterator());
     }
 
     public static <T, R>
-    Lazy<R> foldl(Function2<?super R, ? super T, ? extends R> f, R init, Iterable<? extends T> a) {
-        final Iterator<? extends T> it = a.iterator();
-        return Lazy.expr(() -> {
-            R val = init;
-            while (it.hasNext()) {
-                val = f.apply(val, it.next());
-            }
+    Lazy<R> foldrImpl(Function2<? super T, Lazy<R>, R> f, R init, Iterator<? extends T> it) {
+        if (it.hasNext()) {
+            T e = it.next();  // mustn't be inlined!
+            return f.lazy(e, foldrImpl(f, init, it));
+        } else {
+            return Lazy.valueOf(init);
+        }
+    }
+
+    public static <T, R>
+    Lazy<R> foldl(Function2<Lazy<R>, ? super T, R> f, R init, Iterable<? extends T> a) {
+        return foldlImpl(f, Lazy.valueOf(init), a.iterator());
+    }
+
+    public static <T, R>
+    Lazy<R> foldlImpl(Function2<Lazy<R>, ? super T, R> f, Lazy<R> val, Iterator<T> it) {
+        if (it.hasNext()) {
+            T e = it.next();  // mustn't be inlined!
+            return Lazy.expr(() -> foldlImpl(f, f.lazy(val, e), it).value());
+        } else {
             return val;
-        });
+        }
     }
 }
 
