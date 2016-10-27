@@ -64,4 +64,61 @@ public class FunctionalTest {
         assertThat(list.size(), is(10));
         assertThat(list.toArray(), is(new Integer[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
     }
+
+    @Test
+    public void takeWhileTest() throws Exception {
+        ArrayList<Integer> a = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            a.add(i);
+        }
+        final StringBuilder out = new StringBuilder();
+
+        Lazy<LazyList<Integer>> l1 = Functional.takeWhile(
+                x -> { out.append(x); out.append(" "); return x != 10; }
+                , a
+        );
+
+        out.append("0: ");
+        LazyList<Integer> list = l1.value();
+
+        out.append("1..5: ");
+        list.get(5);
+
+        out.append("6..10: ");
+        list.size();
+        // it is stopped after reaching 10th element
+
+        assertThat(out.toString(), is("0: 0 1..5: 1 2 3 4 5 6..10: 6 7 8 9 10 "));
+        assertThat(list.size(), is(10));
+        assertThat(list.toArray(), is(new Integer[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+    }
+
+    @Test
+    public void takeUntilTest() throws Exception {
+        ArrayList<Integer> a = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            a.add(i);
+        }
+        final StringBuilder out = new StringBuilder();
+
+        Lazy<LazyList<Integer>> l1 = Functional.takeUntil(
+                x -> { out.append(x); out.append(" "); return x == 10; }
+                , a
+        );
+
+        out.append("0: ");
+        LazyList<Integer> list = l1.value();
+
+        out.append("1..5: ");
+        list.get(5);
+
+        out.append("6..10: ");
+        list.size();
+        // it is stopped after reaching 10th element
+
+        assertThat(out.toString(), is("0: 0 1..5: 1 2 3 4 5 6..10: 6 7 8 9 10 "));
+        assertThat(list.size(), is(10));
+        assertThat(list.toArray(), is(new Integer[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+    }
+
 }

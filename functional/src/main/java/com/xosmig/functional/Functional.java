@@ -57,17 +57,17 @@ public final class Functional {
         return foldrImpl.get();
     }
 
-//    public static <T, R>
-//    Lazy<R> foldl(Function2<?super R, ? super T, ? extends R> f, R init, Iterable<? extends T> a) {
-//        final Iterator<? extends T> it = a.iterator();
-//        return new LazyObject<>(() -> {
-//            R val = init;
-//            while (it.hasNext()) {
-//                val = f.apply(val, it.next());
-//            }
-//            return val;
-//        });
-//    }
+    public static <T, R>
+    Lazy<R> foldl(Function2<?super R, ? super T, ? extends R> f, R init, Iterable<? extends T> a) {
+        final Iterator<? extends T> it = a.iterator();
+        return Lazy.expr(() -> {
+            R val = init;
+            while (it.hasNext()) {
+                val = f.apply(val, it.next());
+            }
+            return val;
+        });
+    }
 }
 
 
