@@ -7,6 +7,7 @@ import com.xosmig.function.Predicate1;
 import java.util.Iterator;
 
 public final class Functional {
+
     public static <T, R>
     Lazy<LazyList<R>> map(Function1<? super T, ? extends R> f, Iterable<? extends T> a) {
         return foldr(
