@@ -61,7 +61,7 @@ public final class SecondPartTasks {
 
     // Дано отображение из имени автора в список с содержанием его произведений.
     // Надо вычислить, чья общая длина произведений наибольшая.
-    public static String findPrinter(Map<String, List<String>> compositions) {
+    public static Optional<String> findPrinter(Map<String, List<String>> compositions) {
         return compositions
                 .entrySet()
                 .stream()
@@ -70,8 +70,7 @@ public final class SecondPartTasks {
                             .mapToInt(String::length)
                             .sum()
                 ))
-                .get()
-                .getKey();
+                .map(Map.Entry::getKey);
     }
 
     // Вы крупный поставщик продуктов. Каждая торговая сеть делает вам заказ в виде Map<Товар, Количество>.
