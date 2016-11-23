@@ -3,6 +3,7 @@ package sp;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static sp.SecondPartTasks.piDividedBy4;
 
 public class SecondPartTasksTest {
 
@@ -13,7 +14,8 @@ public class SecondPartTasksTest {
 
     @Test
     public void testPiDividedBy4() {
-//        fail();
+//        System.out.println(piDividedBy4());
+        assertTrue(Math.abs(piDividedBy4() - Math.PI / 4) < 1e-3);
     }
 
     @Test
