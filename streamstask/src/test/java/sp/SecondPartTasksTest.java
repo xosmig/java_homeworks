@@ -11,9 +11,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
 import static org.junit.Assert.*;
-import static sp.SecondPartTasks.findPrinter;
-import static sp.SecondPartTasks.findQuotes;
-import static sp.SecondPartTasks.piDividedBy4;
+import static sp.SecondPartTasks.*;
 
 public class SecondPartTasksTest {
 
@@ -86,6 +84,31 @@ public class SecondPartTasksTest {
 
     @Test
     public void testCalculateGlobalOrder() {
-//        fail();
+        List<Map<String, Integer>> orders = new ArrayList<>();
+
+        {
+            Map<String, Integer> m = new HashMap<>();
+            m.put("apple", 5);
+            m.put("banana", 8);
+            orders.add(m);
+        }
+
+        {
+            Map<String, Integer> m = new HashMap<>();
+            m.put("banana", 2);
+            m.put("cherry", 3);
+            orders.add(m);
+        }
+
+        {
+            Map<String, Integer> m = new HashMap<>();
+            m.put("cherry", 1);
+            orders.add(m);
+        }
+
+        Map<String, Integer> m = calculateGlobalOrder(orders);
+        assertEquals(Integer.valueOf(5), m.get("apple"));
+        assertEquals(Integer.valueOf(10), m.get("banana"));
+        assertEquals(Integer.valueOf(4), m.get("cherry"));
     }
 }
