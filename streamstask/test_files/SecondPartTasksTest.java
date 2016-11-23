@@ -5,34 +5,24 @@ import com.google.common.jimfs.Jimfs;
 import org.junit.Test;
 
 import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static org.junit.Assert.*;
 import static sp.SecondPartTasks.findPrinter;
-import static sp.SecondPartTasks.findQuotes;
 import static sp.SecondPartTasks.piDividedBy4;
 
 public class SecondPartTasksTest {
 
     @Test
     public void testFindQuotes() throws Exception {
-        Path testDir = Paths.get("test_files");
-        List<String> files = new ArrayList<>();
-        Files.walkFileTree(testDir, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                files.add(file.toString());
-                return FileVisitResult.CONTINUE;
-            }
-        });
-        List<String> publics = findQuotes(files, "public");
-        assertTrue(publics.stream().count() > 200);
-        assertTrue(publics.contains("    public static void main(String[] args) {"));
-        assertTrue(publics.contains("public class Artist {"));
-
+        Path output = Paths.get("output.txt");
+        try (BufferedWriter writer = Files.newBufferedWriter(output)) {
+            writer.write("hello");
+        }
     }
 
     @Test
