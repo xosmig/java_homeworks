@@ -27,9 +27,9 @@ public class Main {
 
         if (args.length != 3) {
             if (args.length < 3) {
-                System.out.println("Too few arguments.");
+                System.err.println("Too few arguments.");
             } else {
-                System.out.println("Too many arguments.");
+                System.err.println("Too many arguments.");
             }
             System.out.println(HELP_MSG);
             System.exit(ExitCode.BAD_ARGUMENTS);
@@ -44,8 +44,8 @@ public class Main {
             target = Paths.get(args[1]);
             pattern = Pattern.compile(args[2]);
         } catch(PatternSyntaxException e) {
-            System.out.println("Bad pattern:");
-            System.out.println(e.getMessage());
+            System.err.println("Bad pattern:");
+            System.err.println(e.getMessage());
             System.exit(ExitCode.BAD_ARGUMENTS);
             throw e;  // unreachable, but necessary to avoid compile errors
         }
@@ -53,9 +53,11 @@ public class Main {
         try {
             MZip.extractMatch(source, target, pattern);
         } catch (IOException e) {
-            System.out.println("Fail:");
-            System.out.println(e.getMessage());
+            System.err.println("Fail:");
+            System.err.println(e.getMessage());
             System.exit(ExitCode.EXCEPTION);
         }
+
+        System.out.println("[^_^]");
     }
 }
