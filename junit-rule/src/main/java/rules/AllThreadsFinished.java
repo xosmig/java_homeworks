@@ -10,11 +10,17 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 
-
+/**
+ * This rule will automatically check that all threads, registered via <code>register</code> method call, are finished.
+ */
 public class AllThreadsFinished implements TestRule {
 
     private List<Thread> threads = new ArrayList<>();
 
+
+    /**
+     * Register new thread.
+     */
     public void register(Thread thread) {
         this.threads.add(thread);
     }
