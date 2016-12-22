@@ -13,9 +13,8 @@ public class AllThreadsFinishedTest {
 
     @Rule
     public RuleChain rules = RuleChain
-            .outerRule(this.expectedException)
-            .around(this.threadsCheckRule);
-
+            .outerRule(expectedException)
+            .around(threadsCheckRule);
 
     @Test
     public void testOk() throws Exception {
@@ -24,7 +23,7 @@ public class AllThreadsFinishedTest {
         for (int i = 0; i < n; i++) {
             th[i] = new Thread(this::doSomething);
             th[i].start();
-            this.threadsCheckRule.register(th[i]);
+            threadsCheckRule.register(th[i]);
         }
         for (int i = 0; i < n; i++) {
             th[i].join();
@@ -32,24 +31,37 @@ public class AllThreadsFinishedTest {
     }
 
     @Test
-    public void testFail() throws Exception {
-        this.expectedException.expect(AssertionError.class);
-        this.expectedException.handleAssertionErrors();  // note: deprecated since JUnit 4.12
+    public void testNotFinished() throws Exception {
+        expectedException.expect(AssertionError.class);
+        expectedException.handleAssertionErrors();  // note: deprecated since JUnit 4.12
 
         final int n = 5;
         Thread[] th = new Thread[n];
         for (int i = 0; i < n; i++) {
             th[i] = new Thread(this::doSomething);
             th[i].start();
-            this.threadsCheckRule.register(th[i]);
+            threadsCheckRule.register(th[i]);
         }
     }
 
     @Test
-    public void testEmpty() throws Exception {
-        this.doSomething();
+    public void testExceptionOccurred() throws Exception {
+        expectedException.expect(AssertionError.class);
+        expectedException.handleAssertionErrors();
+
+        Thread th = new Thread(() -> {
+            doSomething();
+            throw new RuntimeException("Hello, World!");
+        });
+        threadsCheckRule.register(th);
+        th.start();
+        th.join();
     }
 
+    @Test
+    public void testEmpty() throws Exception {
+        doSomething();
+    }
 
     volatile long r;
 
